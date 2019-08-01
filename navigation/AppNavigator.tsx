@@ -1,10 +1,36 @@
-import React from 'react';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import React from "react";
+import {
+  createAppContainer,
+  createSwitchNavigator,
+  createStackNavigator
+} from "react-navigation";
 
-import MainTabNavigator from './MainTabNavigator';
+import MainTabNavigator from "./MainTabNavigator";
+import EndFastScreen from "../screens/EndFastScreen/EndFastScreen";
 
-export default createAppContainer(createSwitchNavigator({
-  // You could add another route here for authentication.
-  // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-  Main: MainTabNavigator,
-}));
+const HomeNavigator = createStackNavigator(
+  {
+    // For each screen that you can navigate to, create a new entry like this:
+    Main: {
+      // `ProfileScreen` is a React component that will be the main content of the screen.
+      screen: MainTabNavigator,
+      // When `ProfileScreen` is loaded by the StackNavigator, it will be given a `navigation` prop.
+      navigationOptions: ({ navigation }: any) => ({
+        title: `Save your Fast`
+      })
+    },
+    EndFast: {
+      screen: EndFastScreen
+    }
+  },
+  {
+    mode: "modal"
+  }
+);
+
+export default createAppContainer(
+  createSwitchNavigator({
+    Home: HomeNavigator,
+    EndFast: EndFastScreen
+  })
+);

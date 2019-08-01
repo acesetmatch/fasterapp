@@ -722,6 +722,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
+"@react-native-community/async-storage@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.5.1.tgz#c496b4969eea5b91da1a5919a611046360b0c51f"
+
 "@react-native-community/cli@^1.2.1":
   version "1.9.10"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli/-/cli-1.9.10.tgz#6494e604fae3fd5993571a31bd16f0af751d56b4"
@@ -827,6 +831,10 @@
 "@types/prop-types@*":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
+
+"@types/react-native-background-timer@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-background-timer/-/react-native-background-timer-2.0.0.tgz#c44c57f8fbca9d9d5521fdd72a8f55232b79381e"
 
 "@types/react-native@^0.57.63":
   version "0.57.63"

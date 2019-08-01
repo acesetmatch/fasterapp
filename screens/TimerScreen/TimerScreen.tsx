@@ -1,6 +1,7 @@
 import moment, { Moment } from "moment";
 import React from "react";
-import { Text, View, AsyncStorage } from "react-native";
+import { Text, View } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Button, withTheme } from "react-native-paper";
 import Colors from "../../constants/Colors";
@@ -14,7 +15,9 @@ const TYPE_OF_FAST = "Fast Type";
 const FAST_PROGRAM = "16 : 8 Fasting Program";
 const START_FAST = "Start Fast";
 
-const STOP_FAST = "Stop Fast";
+const END_FAST = "End Fast";
+
+const programTime = 16 * 60 * 60;
 
 interface Props {
   theme: any;
@@ -24,11 +27,12 @@ interface State {
   timeLeft: any;
   fastDuration: number;
   fastStarted: boolean;
-  fastStartDate: number;
-  fastEndDate: number;
+  fastStartDate: moment.Moment;
+  fastEndDate: moment.Moment;
+  timeElapsed: number;
 }
 
-class HomeScreen extends React.Component<Props, State> {
+class TimerScreen extends React.Component<Props, State> {
   static navigationOptions = {
     header: null
   };
@@ -40,8 +44,9 @@ class HomeScreen extends React.Component<Props, State> {
     timeLeft: 0,
     fastDuration: 0,
     fastStarted: false,
-    fastStartDate: moment().valueOf(),
-    fastEndDate: moment().valueOf()
+    fastStartDate: moment(),
+    fastEndDate: moment(),
+    timeElapsed: 0
   };
 
   componentDidMount() {
@@ -59,52 +64,51 @@ class HomeScreen extends React.Component<Props, State> {
   // TODO: Handle errors?
   _getLastSavedFastTime = async () => {
     try {
-      const lastSavedDuration = await DeviceStorage.getItem("fastTimeLeft");
       const fastStartDate = await DeviceStorage.getItem("fastStart");
       const fastEndDate = await DeviceStorage.getItem("fastEnd");
 
-      console.log("Fast End date is: " + fastEndDate);
-      if (!fastStartDate || !fastEndDate || !lastSavedDuration) return;
+      if (!fastStartDate || !fastEndDate) return;
 
-      this.setState({
-        fastDuration: lastSavedDuration,
-        fastStartDate: fastStartDate,
-        fastEndDate: fastEndDate
-      });
+      // let timeElapsed = moment().diff(
+      //   moment(parseInt(fastStartDate)),
+      //   "seconds"
+      // );
+      console.log(moment(fastStartDate));
+      this.setState(
+        {
+          fastStartDate: moment(fastStartDate),
+          fastEndDate: moment(fastEndDate)
+        },
+        () => {
+          this._runBackgroundTimer(this.state.fastDuration);
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  _saveFastStartAndEnd = () => {
-    const fastDuration = this.state.fastDuration;
-    const programTime = 16 * 60 * 60;
-    DeviceStorage.saveItem("fastStart", moment().valueOf());
-    DeviceStorage.saveItem(
-      "fastEnd",
-      moment()
-        .add(programTime, "seconds")
-        .valueOf()
-    );
+  _startCountdownTimer = (totalFastDuration: number) => {
+    this._saveFastStartAndEnd(programTime);
+    this._runBackgroundTimer(this.state.fastDuration);
   };
 
-  _startCountdownTimer = (totalSeconds: number) => {
-    console.log(totalSeconds);
+  // TODO: Resolve with promise.all
+  _saveFastStartAndEnd = async (programTime: number) => {
+    DeviceStorage.saveItem("fastStart", moment());
+    DeviceStorage.saveItem("fastEnd", moment().add(programTime, "seconds"));
+  };
 
-    let secondsLeft = totalSeconds;
-
-    this._saveFastStartAndEnd();
-
+  _runBackgroundTimer = (totalFastSeconds: number) => {
     BackgroundTimer.runBackgroundTimer(() => {
-      if (secondsLeft-- < 0) {
-        secondsLeft = totalSeconds;
-      }
-      console.log("Seconds left is: " + secondsLeft);
-      const percentage = (secondsLeft / totalSeconds) * 100;
-      console.log(percentage);
+      const fastStartDate = this.state.fastStartDate;
+      const secondsDiff = moment().diff(fastStartDate, "seconds");
+      const percentage =
+        ((totalFastSeconds - secondsDiff) / totalFastSeconds) * 100;
+      const timeLeft = totalFastSeconds - secondsDiff;
       this.setState({
+        timeElapsed: timeLeft,
         fill: percentage,
-        timeLeft: secondsLeft,
         fastStarted: true
       });
     }, 1000);
@@ -112,17 +116,20 @@ class HomeScreen extends React.Component<Props, State> {
 
   _stopCountdownTimer = () => {
     BackgroundTimer.stopBackgroundTimer();
+    this._saveFastStartAndEnd(programTime);
+    this.props.navigation.navigate("EndFast");
     this.setState({
       fastStarted: false
     });
   };
 
   _formattedTime = (totalSeconds: number): string => {
-    let hours = Math.floor(totalSeconds / 3600);
+    const hours = Math.floor(totalSeconds / 3600);
     totalSeconds %= 3600;
-    let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
-    return `${hours}:${minutes}:${seconds}`;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+    return `${hours}:${minutes}:${formattedSeconds}`;
   };
 
   render() {
@@ -133,7 +140,8 @@ class HomeScreen extends React.Component<Props, State> {
       fastStarted,
       timeLeft,
       fastStartDate,
-      fastEndDate
+      fastEndDate,
+      timeElapsed
     } = this.state;
 
     return (
@@ -163,17 +171,19 @@ class HomeScreen extends React.Component<Props, State> {
           {(fill: any) => (
             <View style={styles.progressChildren}>
               <Text style={styles.progressSubtitle}>
-                {fill > 0 ? `Remaining ${Math.floor(fill)}%` : "Current Goal"}
+                {timeElapsed > 0
+                  ? `Elapsed Time (${Math.floor(fill)}%)`
+                  : "Current Goal"}
               </Text>
               <Text style={styles.progressTitle}>
-                {fill > 0
-                  ? this._formattedTime(timeLeft)
+                {timeElapsed > 0
+                  ? this._formattedTime(timeElapsed)
                   : `${fastDuration / 60 / 60} hours`}
               </Text>
             </View>
           )}
         </AnimatedCircularProgress>
-        {!fastStarted && (
+        {!fastStarted ? (
           <Button
             //color="#8EA2FF"
             mode="contained"
@@ -182,10 +192,9 @@ class HomeScreen extends React.Component<Props, State> {
             style={styles.button}
             theme={this.props.theme}
           >
-            {fastStarted ? STOP_FAST : START_FAST}
+            {fastStarted ? END_FAST : START_FAST}
           </Button>
-        )}
-        {fastStarted && (
+        ) : (
           <Button
             color="#fff"
             mode="contained"
@@ -194,7 +203,7 @@ class HomeScreen extends React.Component<Props, State> {
             style={styles.button}
             theme={{ colors: { text: "#fff" } }}
           >
-            {STOP_FAST}
+            {END_FAST}
           </Button>
         )}
         <View
@@ -205,14 +214,12 @@ class HomeScreen extends React.Component<Props, State> {
         >
           <View style={styles.fastInfoContainer}>
             <Text style={styles.title}>Started Fasting</Text>
-            <Text style={styles.subTitle}>
-              {moment().calendar(fastStartDate)}
-            </Text>
+            <Text style={styles.subTitle}>{fastStartDate.calendar()}</Text>
           </View>
           <View style={styles.fastInfoContainer}>
             <Text style={styles.title}>Fast Ending</Text>
             <Text style={styles.subTitle}>
-              {moment().calendar(fastEndDate)}
+              {fastEndDate.calendar(fastEndDate)}
             </Text>
           </View>
         </View>
@@ -221,4 +228,4 @@ class HomeScreen extends React.Component<Props, State> {
   }
 }
 
-export default withTheme(HomeScreen as any);
+export default withTheme(TimerScreen as any);

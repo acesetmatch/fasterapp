@@ -7,8 +7,7 @@ export default class DeviceStorage {
       const item: string | null = await AsyncStorage.getItem(key);
       return item;
     } catch (err) {
-      console.log(err);
-      return err;
+      throw new Error(err);
     }
   }
 
@@ -16,8 +15,7 @@ export default class DeviceStorage {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (err) {
-      throw new Error(err);
-      console.log("Error saving item");
+      Alert.alert("Error saving item");
     }
   }
 }

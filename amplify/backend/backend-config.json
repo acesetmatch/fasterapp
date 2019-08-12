@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"fasterapp930e4877": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

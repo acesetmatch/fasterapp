@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "fasterapp-dev-20190808210441-authRole",
+            "UnauthRoleArn": "arn:aws:iam::797361751367:role/fasterapp-dev-20190808210441-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::797361751367:role/fasterapp-dev-20190808210441-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "fasterapp-dev-20190808210441-deployment",
+            "UnauthRoleName": "fasterapp-dev-20190808210441-unauthRole",
+            "StackName": "fasterapp-dev-20190808210441",
+            "StackId": "arn:aws:cloudformation:us-east-2:797361751367:stack/fasterapp-dev-20190808210441/0cd20ef0-ba4a-11e9-a0ee-0658482cfd4e"
+        },
+        "categories": {
+            "auth": {
+                "fasterapp930e4877": {}
+            }
+        }
+    }
+}

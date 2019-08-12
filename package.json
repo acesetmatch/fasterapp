@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.5.1",
+    "aws-amplify": "^1.1.36",
+    "aws-amplify-react-native": "^2.1.16",
     "moment": "^2.24.0",
     "react": "16.8.3",
     "react-native": "0.59.9",
@@ -20,7 +22,8 @@
     "react-native-paper": "^2.15.2",
     "react-native-svg": "^9.4.0",
     "react-native-vector-icons": "^6.4.2",
-    "react-navigation": "^3.11.0"
+    "react-navigation": "^3.11.0",
+    "react-navigation-hooks": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

@@ -12,6 +12,9 @@ import React, { Component } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import AppNavigator from "./navigation/AppNavigator";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import Amplify from "aws-amplify";
+import awsconfig from "./aws-exports";
+import { withAuthenticator } from "aws-amplify-react-native";
 
 const instructions = Platform.select({
   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
@@ -37,7 +40,7 @@ const theme = {
 
 interface Props {}
 
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   render() {
     return (
       <PaperProvider theme={theme}>
@@ -48,6 +51,10 @@ export default class App extends Component<Props> {
     );
   }
 }
+
+export default withAuthenticator(App, true);
+
+Amplify.configure(awsconfig);
 
 const styles = StyleSheet.create({
   container: {

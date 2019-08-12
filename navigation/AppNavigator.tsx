@@ -7,6 +7,8 @@ import {
 
 import MainTabNavigator from "./MainTabNavigator";
 import EndFastScreen from "../screens/EndFastScreen/EndFastScreen";
+import AuthNavigator from "./AuthNavigator";
+import AuthLoadingScreen from "../screens/AuthLoadingScreen/AuthLoadingScreen";
 
 const HomeNavigator = createStackNavigator(
   {
@@ -29,8 +31,14 @@ const HomeNavigator = createStackNavigator(
 );
 
 export default createAppContainer(
-  createSwitchNavigator({
-    Home: HomeNavigator,
-    EndFast: EndFastScreen
-  })
+  createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingScreen,
+      Home: HomeNavigator,
+      Auth: AuthNavigator
+    },
+    {
+      initialRouteName: "AuthLoading"
+    }
+  )
 );

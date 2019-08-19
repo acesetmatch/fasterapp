@@ -38,6 +38,8 @@ const theme = {
   }
 };
 
+Amplify.configure(awsconfig);
+
 interface Props {}
 
 class App extends Component<Props> {
@@ -52,9 +54,7 @@ class App extends Component<Props> {
   }
 }
 
-export default withAuthenticator(App, true);
-
-Amplify.configure(awsconfig);
+export default withAuthenticator(App, { awsconfig });
 
 const styles = StyleSheet.create({
   container: {

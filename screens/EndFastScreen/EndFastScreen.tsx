@@ -6,6 +6,7 @@ import { withTheme, Button } from "react-native-elements";
 import Colors from "../../constants/Colors";
 import DeviceStorage from "../../api/DeviceStorage";
 import SavedFastItem from "../../components/SavedFastItem";
+import { API, graphqlOperation } from "aws-amplify";
 
 const DummyText = {
   TOTAL_FASTING: "Total fasting time",
@@ -19,7 +20,30 @@ enum FastProgram {
   Circadian
 }
 
+const listUsersQuery = `query {
+  listUsers(filter: {
+    name: {
+      contains:"Bobby"
+    }
+  }) {
+    items {
+      id
+      name
+    }
+  }
+}`;
+
 const EndFastScreen = () => {
+  useEffect(() => {
+    const data = loadListOfUsers();
+  });
+
+  const loadListOfUsers = async () => {
+    const data = await API.graphql(graphqlOperation(listUsersQuery));
+    console.log(data);
+    return data;
+  };
+
   const _closeModal = () => {};
 
   const _saveFast = () => {

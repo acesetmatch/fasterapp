@@ -1,0 +1,12 @@
+projects:
+  fasterappAPI:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: FasterAPI.ts
+        docsFilePath: src/graphql

@@ -1,0 +1,27 @@
+type Fast @model {
+  id: ID!
+  programType: String!
+  startDate: Int!
+  endDate: Int!
+  feedback: String!
+}
+
+type User @model {
+  id: ID!
+  name: String!
+  email: String!
+  weight: Int!
+  fasts: [Fast]!
+}
+
+# type Mutation {
+#   createUser(name: String!, email: String!, weight: Int!): User!
+#   updateUser(id: ID!, name: String!, email: String!, weight: Int!): User!
+#   deleteUser(id: ID!): User!
+# }
+
+# type Query {
+#   allFasts: [Fast!]!
+#   allUsers: [Fast!]!
+#   User(id: ID!): User
+# }

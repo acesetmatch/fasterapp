@@ -3,6 +3,7 @@ type Fast @model {
   programType: String!
   startDate: Int!
   endDate: Int!
+  duration: Float!
   feedback: String!
 }
 

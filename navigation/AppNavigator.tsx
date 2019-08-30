@@ -6,9 +6,9 @@ import {
 } from "react-navigation";
 
 import MainTabNavigator from "./MainTabNavigator";
-import EndFastScreen from "../screens/EndFastScreen/EndFastScreen";
+import EndFastScreen from "../screens/EndFast/EndFastScreen";
 import AuthNavigator from "./AuthNavigator";
-import AuthLoadingScreen from "../screens/AuthLoadingScreen/AuthLoadingScreen";
+import AuthLoadingScreen from "../screens/AuthLoading/AuthLoadingScreen";
 
 const HomeNavigator = createStackNavigator(
   {

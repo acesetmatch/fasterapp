@@ -6,10 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "ios": "react-native run-ios",
     "android": "react-native run-android",
-    "test": "jest"
+    "test": "jest",
+    "clean": "watchman watch-del-all && rm -rf node_modules/ && yarn cache clean && yarn install && yarn start -- --reset-cache"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.5.1",
+    "await-to-js": "^2.1.1",
     "aws-amplify": "^1.1.36",
     "aws-amplify-react-native": "^2.1.16",
     "moment": "^2.24.0",

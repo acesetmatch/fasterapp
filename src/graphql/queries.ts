@@ -7,6 +7,7 @@ export const getFast = `query GetFast($id: ID!) {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -22,6 +23,7 @@ export const listFasts = `query ListFasts(
       programType
       startDate
       endDate
+      duration
       feedback
     }
     nextToken
@@ -39,6 +41,7 @@ export const getUser = `query GetUser($id: ID!) {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }
@@ -60,6 +63,7 @@ export const listUsers = `query ListUsers(
         programType
         startDate
         endDate
+        duration
         feedback
       }
     }

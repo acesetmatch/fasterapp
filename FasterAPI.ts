@@ -6,6 +6,7 @@ export type CreateFastInput = {
   programType: string,
   startDate: number,
   endDate: number,
+  duration: number,
   feedback: string,
 };
 
@@ -14,6 +15,7 @@ export type UpdateFastInput = {
   programType?: string | null,
   startDate?: number | null,
   endDate?: number | null,
+  duration?: number | null,
   feedback?: string | null,
 };
 
@@ -44,6 +46,7 @@ export type ModelFastFilterInput = {
   programType?: ModelStringFilterInput | null,
   startDate?: ModelIntFilterInput | null,
   endDate?: ModelIntFilterInput | null,
+  duration?: ModelFloatFilterInput | null,
   feedback?: ModelStringFilterInput | null,
   and?: Array< ModelFastFilterInput | null > | null,
   or?: Array< ModelFastFilterInput | null > | null,
@@ -88,6 +91,18 @@ export type ModelIntFilterInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelFloatFilterInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  contains?: number | null,
+  notContains?: number | null,
+  between?: Array< number | null > | null,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDFilterInput | null,
   name?: ModelStringFilterInput | null,
@@ -109,6 +124,7 @@ export type CreateFastMutation = {
     programType: string,
     startDate: number,
     endDate: number,
+    duration: number,
     feedback: string,
   } | null,
 };
@@ -124,6 +140,7 @@ export type UpdateFastMutation = {
     programType: string,
     startDate: number,
     endDate: number,
+    duration: number,
     feedback: string,
   } | null,
 };
@@ -139,6 +156,7 @@ export type DeleteFastMutation = {
     programType: string,
     startDate: number,
     endDate: number,
+    duration: number,
     feedback: string,
   } | null,
 };
@@ -160,6 +178,7 @@ export type CreateUserMutation = {
       programType: string,
       startDate: number,
       endDate: number,
+      duration: number,
       feedback: string,
     } | null >,
   } | null,
@@ -182,6 +201,7 @@ export type UpdateUserMutation = {
       programType: string,
       startDate: number,
       endDate: number,
+      duration: number,
       feedback: string,
     } | null >,
   } | null,
@@ -204,6 +224,7 @@ export type DeleteUserMutation = {
       programType: string,
       startDate: number,
       endDate: number,
+      duration: number,
       feedback: string,
     } | null >,
   } | null,
@@ -220,6 +241,7 @@ export type GetFastQuery = {
     programType: string,
     startDate: number,
     endDate: number,
+    duration: number,
     feedback: string,
   } | null,
 };
@@ -239,6 +261,7 @@ export type ListFastsQuery = {
       programType: string,
       startDate: number,
       endDate: number,
+      duration: number,
       feedback: string,
     } | null > | null,
     nextToken: string | null,
@@ -262,6 +285,7 @@ export type GetUserQuery = {
       programType: string,
       startDate: number,
       endDate: number,
+      duration: number,
       feedback: string,
     } | null >,
   } | null,
@@ -288,9 +312,103 @@ export type ListUsersQuery = {
         programType: string,
         startDate: number,
         endDate: number,
+        duration: number,
         feedback: string,
       } | null >,
     } | null > | null,
     nextToken: string | null,
+  } | null,
+};
+
+export type OnCreateFastSubscription = {
+  onCreateFast:  {
+    __typename: "Fast",
+    id: string,
+    programType: string,
+    startDate: number,
+    endDate: number,
+    duration: number,
+    feedback: string,
+  } | null,
+};
+
+export type OnUpdateFastSubscription = {
+  onUpdateFast:  {
+    __typename: "Fast",
+    id: string,
+    programType: string,
+    startDate: number,
+    endDate: number,
+    duration: number,
+    feedback: string,
+  } | null,
+};
+
+export type OnDeleteFastSubscription = {
+  onDeleteFast:  {
+    __typename: "Fast",
+    id: string,
+    programType: string,
+    startDate: number,
+    endDate: number,
+    duration: number,
+    feedback: string,
+  } | null,
+};
+
+export type OnCreateUserSubscription = {
+  onCreateUser:  {
+    __typename: "User",
+    id: string,
+    name: string,
+    email: string,
+    weight: number,
+    fasts:  Array< {
+      __typename: "Fast",
+      id: string,
+      programType: string,
+      startDate: number,
+      endDate: number,
+      duration: number,
+      feedback: string,
+    } | null >,
+  } | null,
+};
+
+export type OnUpdateUserSubscription = {
+  onUpdateUser:  {
+    __typename: "User",
+    id: string,
+    name: string,
+    email: string,
+    weight: number,
+    fasts:  Array< {
+      __typename: "Fast",
+      id: string,
+      programType: string,
+      startDate: number,
+      endDate: number,
+      duration: number,
+      feedback: string,
+    } | null >,
+  } | null,
+};
+
+export type OnDeleteUserSubscription = {
+  onDeleteUser:  {
+    __typename: "User",
+    id: string,
+    name: string,
+    email: string,
+    weight: number,
+    fasts:  Array< {
+      __typename: "Fast",
+      id: string,
+      programType: string,
+      startDate: number,
+      endDate: number,
+      duration: number,
+      feedback: string,
+    } | null >,
   } | null,
 };

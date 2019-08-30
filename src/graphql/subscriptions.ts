@@ -7,6 +7,7 @@ export const onCreateFast = `subscription OnCreateFast {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -17,6 +18,7 @@ export const onUpdateFast = `subscription OnUpdateFast {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -27,6 +29,7 @@ export const onDeleteFast = `subscription OnDeleteFast {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -42,6 +45,7 @@ export const onCreateUser = `subscription OnCreateUser {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }
@@ -58,6 +62,7 @@ export const onUpdateUser = `subscription OnUpdateUser {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }
@@ -74,6 +79,7 @@ export const onDeleteUser = `subscription OnDeleteUser {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }

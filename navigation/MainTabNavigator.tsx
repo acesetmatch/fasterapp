@@ -7,7 +7,7 @@ import {
 
 import TabBarIcon from "../components/TabBarIcon";
 import SocialScreen from "../screens/SocialScreen";
-import TimerScreen from "../screens/TimerScreen/TimerScreen";
+import TimerScreen from "../screens/Timer/TimerScreen";
 
 const TimerStack = createStackNavigator({
   Timer: TimerScreen

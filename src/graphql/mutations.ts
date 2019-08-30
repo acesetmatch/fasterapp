@@ -7,6 +7,7 @@ export const createFast = `mutation CreateFast($input: CreateFastInput!) {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -17,6 +18,7 @@ export const updateFast = `mutation UpdateFast($input: UpdateFastInput!) {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -27,6 +29,7 @@ export const deleteFast = `mutation DeleteFast($input: DeleteFastInput!) {
     programType
     startDate
     endDate
+    duration
     feedback
   }
 }
@@ -42,6 +45,7 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }
@@ -58,6 +62,7 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }
@@ -74,6 +79,7 @@ export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
       programType
       startDate
       endDate
+      duration
       feedback
     }
   }

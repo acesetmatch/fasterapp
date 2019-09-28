@@ -13,12 +13,9 @@ interface Props {
 
 const SavedFastItem = ({ title, subTitle, buttonText }: Props) => {
   return (
-    <View style={styles.listItem}>
-      <View>
-        <Text>{title}</Text>
-        <Text>{subTitle}</Text>
-      </View>
-      <Button title={buttonText} />
+    <View style={styles.mainContainer}>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.subtitle}>{subTitle}</Text>
     </View>
   );
 };
@@ -32,5 +29,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  listItem: {}
+  title: {
+    fontSize: 14
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#979797"
+  }
 });

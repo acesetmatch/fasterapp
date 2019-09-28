@@ -19,8 +19,8 @@ interface State {
   timeLeft: any;
   fastDuration: number;
   fastStarted: boolean;
-  fastStartDate: moment.Moment;
-  fastEndDate: moment.Moment;
+  fastStartDate: number | undefined;
+  fastEndDate: number | undefined;
   timeElapsed: number;
 }
 
@@ -59,8 +59,8 @@ class TimerScreen extends React.Component<Props, State> {
     timeLeft: 0,
     fastDuration: 0,
     fastStarted: false,
-    fastStartDate: moment(),
-    fastEndDate: moment(),
+    fastStartDate: undefined,
+    fastEndDate: undefined,
     timeElapsed: 0
   };
 
@@ -93,7 +93,7 @@ class TimerScreen extends React.Component<Props, State> {
       console.log("Error fetching end date");
     }
 
-    return { startDate: moment(startDate), endDate: moment(endDate) };
+    return { startDate: startDate, endDate: endDate };
   };
 
   // TODO: Handle errors?
@@ -104,25 +104,44 @@ class TimerScreen extends React.Component<Props, State> {
     } = await this._retrieveFastTimesFromLocalStorage();
     this.setState(
       {
-        fastStartDate: moment(startDate) || moment(),
-        fastEndDate: moment(endDate) || moment()
+        fastStartDate: startDate,
+        fastEndDate: endDate
       },
       () => {
         if (!startDate || !endDate) return;
-        this._runBackgroundTimer(this.state.fastDuration);
+        this._runBackgroundTimer(this.state.fastDuration, startDate, endDate);
       }
     );
   };
 
-  _startCountdownTimer = (totalFastDuration: number) => {
-    this._saveFastStartAndEnd(programTime);
-    this._runBackgroundTimer(this.state.fastDuration);
+  _startCountdownTimer = async (totalFastDuration: number) => {
+    let { startDate, endDate } = await this._saveFastStartAndEnd(programTime);
+    if (!startDate) startDate = moment().unix();
+    if (!endDate) endDate = moment().unix();
+    this._runBackgroundTimer(this.state.fastDuration, startDate, endDate);
   };
 
-  _runBackgroundTimer = (totalFastSeconds: number) => {
+  _resetBackgroundTimer = () => {};
+
+  _resetFast = () => {
+    BackgroundTimer.stopBackgroundTimer();
+    this.setState({
+      timeElapsed: 0,
+      fill: 100,
+      fastStarted: false,
+      fastStartDate: undefined,
+      fastEndDate: undefined
+    });
+  };
+
+  _runBackgroundTimer = (
+    totalFastSeconds: number,
+    startDate: number,
+    endDate: number
+  ) => {
     BackgroundTimer.runBackgroundTimer(() => {
-      const fastStartDate = this.state.fastStartDate;
-      const secondsDiff = moment().diff(fastStartDate, "seconds");
+      // const secondsDiff = moment().diff(moment(fastStartDate), "seconds");
+      const secondsDiff = moment().unix() - startDate;
       const percentage =
         ((totalFastSeconds - secondsDiff) / totalFastSeconds) * 100;
       const timeLeft = totalFastSeconds - secondsDiff;
@@ -135,7 +154,7 @@ class TimerScreen extends React.Component<Props, State> {
   };
 
   // TODO: Resolve with promise.all
-  _saveFastStartAndEnd = async (programTime: number) => {
+  _saveFastStartAndEnd = async (programTime: number): Promise<any> => {
     const [errStartDate, startDate] = await to(
       DeviceStorage.saveItem(DEVICE_STORAGE_KEYS.fastStartDate, moment().unix())
     );
@@ -156,6 +175,8 @@ class TimerScreen extends React.Component<Props, State> {
     if (errEndDate) {
       return console.log("Error saving value");
     }
+
+    return { startDate, endDate };
   };
 
   _getStartAndEndDatesFromLocalStorage = async (): Promise<any> => {
@@ -185,15 +206,16 @@ class TimerScreen extends React.Component<Props, State> {
     } = await this._getStartAndEndDatesFromLocalStorage();
 
     const fastSessionDetails: FastSession = {
-      startDate: moment().unix(),
-      endDate: moment().unix(),
+      startDate: startDate,
+      endDate: endDate,
       programType: ProgramType.Circadian_Rhythm,
       feedback: "It felt amazing",
       duration: 16000
     };
 
     this.props.navigation.navigate("EndFast", {
-      fastSession: fastSessionDetails
+      fastSession: fastSessionDetails,
+      stopTimer: this._resetFast
     });
 
     this.setState({
@@ -284,25 +306,27 @@ class TimerScreen extends React.Component<Props, State> {
             {END_FAST}
           </Button>
         )}
-        <View
-          style={{
-            marginTop: 30,
-            flexDirection: "row"
-          }}
-        >
-          <View style={styles.fastInfoContainer}>
-            <Text style={styles.title}>Started Fasting</Text>
-            <Text style={styles.subTitle}>
-              {moment(fastStartDate).calendar()}
-            </Text>
+        {fastStartDate && fastEndDate && (
+          <View
+            style={{
+              marginTop: 30,
+              flexDirection: "row"
+            }}
+          >
+            <View style={styles.fastInfoContainer}>
+              <Text style={styles.title}>Started Fasting</Text>
+              <Text style={styles.subTitle}>
+                {moment.unix(fastStartDate as any).calendar()}
+              </Text>
+            </View>
+            <View style={styles.fastInfoContainer}>
+              <Text style={styles.title}>Fast Ending</Text>
+              <Text style={styles.subTitle}>
+                {moment(fastEndDate).calendar(fastEndDate)}
+              </Text>
+            </View>
           </View>
-          <View style={styles.fastInfoContainer}>
-            <Text style={styles.title}>Fast Ending</Text>
-            <Text style={styles.subTitle}>
-              {moment(fastEndDate).calendar(fastEndDate)}
-            </Text>
-          </View>
-        </View>
+        )}
       </View>
     );
   }
